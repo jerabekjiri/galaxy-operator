@@ -4,13 +4,15 @@ image: quay.io/centos/centos:stream9-minimal
 before_script:
   - microdnf install -y --nodocs --setopt=install_weak_deps=0 findutils git-core
 
+default:
+  tags:
+    - shared-podman
+
 downstreamify:
   stage: test
   script:
     - bash downstreamify.sh
     - if [ -n "$(git diff)" ]; then echo "Looks like you need to run the downstreamify.sh script and commit the changes !"; git diff --color; exit 1; fi
-  tags:
-    - shared
 no-log:
   stage: test
   script: |
@@ -21,5 +23,3 @@ no-log:
       echo "${no_log}"
       exit 1
     fi
-  tags:
-    - shared
