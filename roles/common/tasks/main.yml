@@ -19,7 +19,7 @@
   when: image_pull_secret|type_debug == 'NoneType' or image_pull_secrets|type_debug == 'NoneType'
 
 - name: Get the imagePullSecrets from "{{ ansible_operator_meta.name }}"
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: v1
     kind: ServiceAccount
     name: "{{ ansible_operator_meta.name }}"
@@ -33,13 +33,13 @@
   with_items: '{{ _sa_output.resources[0].imagePullSecrets }}'
 
 - name: Update service account with image pull secret
-  k8s:
+  kubernetes.core.k8s:
     apply: true
     definition: "{{ lookup('template', 'service_account.yaml.j2') }}"
 
 - block:
   - name: Get default ingress domain
-    k8s_info:
+    kubernetes.core.k8s_info:
       api_version: config.openshift.io/v1
       kind: Ingress
       name: cluster

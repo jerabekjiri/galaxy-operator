@@ -1,5 +1,5 @@
 ---
-_entrypoint_dir: /venv/bin
+_entrypoint_dir: /usr/bin
 supported_pg_version: 15
 # version check
-gating_version: ''
+gating_version: '4.10.0'

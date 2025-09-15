@@ -1,7 +1,7 @@
 ---
-deployment_kind: Galaxy
+deployment_kind: AutomationHub
 deployment_api_version: v1beta1
-deployment_type: "galaxy"
+deployment_type: "automationhub"
 _postgres_image: quay.io/sclorg/postgresql-15-c9s:latest
 
 supported_pg_version: 15

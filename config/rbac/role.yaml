@@ -85,7 +85,7 @@ rules:
   - apiGroups:
       - ""
     resourceNames:
-      - galaxy-operator-sa
+      - automationhub-operator-sa
     resources:
       - serviceaccounts
     verbs:

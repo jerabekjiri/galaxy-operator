@@ -1,15 +1,15 @@
 ---
 supported_pg_version: 15
-deployment_type: "galaxy"
+deployment_type: "automationhub"
 _postgres_image: quay.io/sclorg/postgresql-15-c9s:latest
 
-custom_resource_key: '_galaxy_ansible_com_galaxyrestore'
+custom_resource_key: '_automationhub_ansible_com_automationhubrestore'
 
-deployment_kind: Galaxy
+deployment_kind: AutomationHub
 deployment_api_version: v1beta1
 
 backup_api_version: 'v1beta1'
-backup_kind: 'GalaxyBackup'
+backup_kind: 'AutomationHubBackup'
 
 # If set to true, the restore process will delete the existing database and create a new one
 force_drop_db: false

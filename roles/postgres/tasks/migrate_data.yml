@@ -16,7 +16,7 @@
   when: postgres_label_selector is not defined
 
 - name: Get the postgres pod information
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Pod
     api_version: v1
     namespace: '{{ ansible_operator_meta.namespace }}'
@@ -32,7 +32,7 @@
   set_fact:
     postgres_pod_name: "{{ postgres_pod['resources'][0]['metadata']['name'] }}"
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -47,7 +47,7 @@
 - name: Scale down deployments for migration
   include_tasks: scale_down_deployments.yml
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -70,7 +70,7 @@
       -F custom
   no_log: "{{ no_log }}"
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -90,7 +90,7 @@
       -d {{ postgres_database }}
   no_log: "{{ no_log }}"
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -103,7 +103,7 @@
         lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
 - name: Stream backup from pg_dump to the new postgresql container
-  k8s_exec:
+  kubernetes.core.k8s_exec:
     namespace: "{{ ansible_operator_meta.namespace }}"
     pod: "{{ postgres_pod_name }}"
     command: |
@@ -135,7 +135,7 @@
   set_fact:
     postgres_migrated_from_secret: "{{ postgres_migrant_configuration_secret }}"
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"

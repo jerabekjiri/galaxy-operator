@@ -12,7 +12,7 @@
 
 - name: Set galaxy-api image URL
   set_fact:
-    _image: "{{ _custom_image | default(lookup('env', 'RELATED_IMAGE_GALAXY')) | default(_default_image, true) }}"
+    _image: "{{ _custom_image | default(lookup('env', 'RELATED_IMAGE_HUB')) | default(_default_image, true) }}"
 
 - name: Set default galaxy-web image
   set_fact:
@@ -27,4 +27,4 @@
 
 - name: Set galaxy-web image URL
   set_fact:
-    _image_web: "{{ _custom_image_web | default(lookup('env', 'RELATED_IMAGE_GALAXY_WEB')) | default(_default_image_web, true) }}"
+    _image_web: "{{ _custom_image_web | default(lookup('env', 'RELATED_IMAGE_HUB_WEB')) | default(_default_image_web, true) }}"

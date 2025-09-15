@@ -1,5 +1,5 @@
 ---
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -12,7 +12,7 @@
         lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
 - name: Check for signing keys
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: '{{ signing_secret }}'
@@ -21,7 +21,7 @@
 
 - name: Get GPG key ID
   block:
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"
@@ -29,11 +29,11 @@
       conditions:
         - type: "{{ deployment_type|capitalize }}-API-Ready"
           message: Importing galaxy signing service GPG key file
-          reason: ImportingGalaxyGPGKey
+          reason: ImportingAutomationHubGPGKey
           status: "False"
           lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"

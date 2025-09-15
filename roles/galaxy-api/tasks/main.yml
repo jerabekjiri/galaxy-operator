@@ -1,6 +1,6 @@
 ---
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -13,14 +13,14 @@
         lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
 - name: galaxy-api service
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml.j2') | from_yaml }}"
   with_items:
     - galaxy-api
 
 - name: Apply Redirect Page Configmap
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'redirect-page.configmap.html.j2') }}"
   when: public_base_url is defined
@@ -31,7 +31,7 @@
   when: affinity is defined and affinity.node_affinity is defined
 
 - name: Get container token configuration
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: '{{ container_token_secret }}'
@@ -55,7 +55,7 @@
     - _container_token_configuration['resources'][0]['data']['tls.key'] is defined
     - _container_token_configuration['resources'][0]['data']['tls.key'] | length
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -68,7 +68,7 @@
         lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
 - name: galaxy-api deployment
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml.j2') | from_yaml }}"
   with_items:
@@ -77,7 +77,7 @@
 - include_tasks:
     file: resource_configuration.yml
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"

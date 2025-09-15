@@ -30,7 +30,7 @@
     - upgraded_postgres_version is defined
 
 - name: Get the resource pod information.
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Pod
     api_version: v1
     namespace: '{{ ansible_operator_meta.namespace }}'
@@ -149,11 +149,11 @@
     name: "{{ ansible_operator_meta.name }}"
     namespace: "{{ ansible_operator_meta.namespace }}"
     status:
-      deployedImage: "{{ _custom_image | default(lookup('env', 'RELATED_IMAGE_GALAXY')) | default(_default_image) }}"
+      deployedImage: "{{ _custom_image | default(lookup('env', 'RELATED_IMAGE_HUB')) | default(_default_image) }}"
 
 - block:
     - name: Retrieve route URL
-      k8s_info:
+      kubernetes.core.k8s_info:
         kind: Route
         api_version: "route.openshift.io/v1"
         namespace: '{{ ansible_operator_meta.namespace }}'
@@ -171,7 +171,7 @@
 
   when: ingress_type | lower == 'route'
 
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"

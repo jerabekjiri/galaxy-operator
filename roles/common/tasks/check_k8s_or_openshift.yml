@@ -18,7 +18,7 @@
     msg: "CLUSTER TYPE: is_openshift={{ is_openshift }}; is_k8s={{ is_k8s }}"
 
 - block:
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"

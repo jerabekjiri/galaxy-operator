@@ -1,6 +1,6 @@
 ---
 
-- name: Configure Galaxy Server Secret
+- name: Configure AutomationHub Server Secret
   include_tasks: combine_galaxy_settings.yml
 
 - name: Include redis role
@@ -14,5 +14,5 @@
     - sso_secret is defined
     - sso_secret | length
 
-- name: Configure Galaxy Server Secret
+- name: Configure AutomationHub Server Secret
   include_tasks: galaxy_server_secret.yml

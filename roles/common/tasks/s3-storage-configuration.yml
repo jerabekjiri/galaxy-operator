@@ -1,6 +1,6 @@
 ---
 - name: Checking s3 storage configurations
-  k8s_status:
+  operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -13,7 +13,7 @@
         lastTransitionTime: "{{ lookup('pipe', 'date --iso-8601=seconds') }}"
 
 - name: Check for specified s3 storage configuration
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Secret
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: '{{ object_storage_s3_secret  }}'
@@ -31,7 +31,7 @@
 
 - block:
   - name: Checking format in s3 Secret
-    k8s_status:
+    operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"
@@ -92,7 +92,7 @@
 
 - block:
   - name: Checking Missing s3 fields in Secret
-    k8s_status:
+    operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"

@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  author: Galaxy-Operator Team
-  description: A role to setup Galaxy NGINX web proxy service
+  author: AutomationHub-Operator Team
+  description: A role to setup AutomationHub NGINX web proxy service
   issue_tracker_url: https://github.com/ansible/galaxy-operator/issues/new
   license: GPL-2.0-or-later
   company: Red Hat

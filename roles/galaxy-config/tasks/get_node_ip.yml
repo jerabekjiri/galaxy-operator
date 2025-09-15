@@ -1,5 +1,5 @@
 ---
-- k8s_status:
+- operator_sdk.util.k8s_status:
     api_version: "{{ api_version }}"
     kind: "{{ kind }}"
     name: "{{ ansible_operator_meta.name }}"
@@ -26,7 +26,7 @@
     - hostname is defined
 
 - block:
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: "{{ api_version }}"
       kind: "{{ kind }}"
       name: "{{ ansible_operator_meta.name }}"
@@ -56,7 +56,7 @@
 
 - block:
     - name: Retrieve service node port
-      k8s_info:
+      kubernetes.core.k8s_info:
         kind: Service
         namespace: '{{ ansible_operator_meta.namespace }}'
         name: '{{ ansible_operator_meta.name }}-web-svc'
@@ -75,7 +75,7 @@
         msg: "{{ nodeport_port }}"
 
     - name: Retrieve web pod
-      k8s_info:
+      kubernetes.core.k8s_info:
         kind: Pod
         api_version: v1
         namespace: "{{ ansible_operator_meta.namespace }}"

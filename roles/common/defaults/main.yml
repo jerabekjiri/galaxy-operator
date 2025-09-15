@@ -1,15 +1,15 @@
 ---
 image_pull_secret: ''
 image_pull_secrets: []
-operator_service_account_name: '{{ lookup("env","OPERATOR_SA_NAME") | default("galaxy-operator-sa",true) }}'
+operator_service_account_name: '{{ lookup("env","OPERATOR_SA_NAME") | default("automationhub-operator-sa",true) }}'
 bundle_cacert_secret: ''
 
 is_k8s: false
 is_openshift: false
 
-deployment_type: galaxy
+deployment_type: automationhub
 
-# idle_deployment - Scale down replicas to put Galaxy into an idle mode
+# idle_deployment - Scale down replicas to put AutomationHub into an idle mode
 idle_deployment: false
 
 api: {}
@@ -107,7 +107,7 @@ postgres_migrant_configuration_secret: ''
 # Enable PostgreSQL SCRAM-SHA-256 migration
 postgres_scram_migration_enabled: true
 
-# Add a topologySpreadConstraints for the Galaxy pods.
+# Add a topologySpreadConstraints for the AutomationHub pods.
 # Specify as literal block. E.g.:
 # topology_spread_constraints: |
 #   - maxSkew: 100
@@ -118,7 +118,7 @@ postgres_scram_migration_enabled: true
 #         app.kubernetes.io/name: "<resourcename>"
 topology_spread_constraints: ''
 
-# Add a nodeSelector for the Galaxy pods. It must match a node's labels for the pod
+# Add a nodeSelector for the AutomationHub pods. It must match a node's labels for the pod
 # to be scheduled on that node. Specify as literal block. E.g.:
 # node_selector: |
 #   disktype: ssd
@@ -126,11 +126,11 @@ topology_spread_constraints: ''
 #   kubernetes.io/os: linux
 node_selector: ''
 
-# Add node tolerations for the Galaxy pods. Specify as literal block. E.g.:
+# Add node tolerations for the AutomationHub pods. Specify as literal block. E.g.:
 # tolerations: |
 #   - key: "dedicated"
 #     operator: "Equal"
-#     value: "Galaxy"
+#     value: "AutomationHub"
 #     effect: "NoSchedule"
 tolerations: ''
 

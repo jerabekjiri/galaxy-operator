@@ -1,6 +1,6 @@
 ---
 - name: redis persistent volume claim
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml.j2') | from_yaml }}"
   with_items:
@@ -8,7 +8,7 @@
   when: redis_data_persistence | bool
 
 - name: redis service
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.service.yaml.j2') | from_yaml }}"
   with_items:
@@ -22,7 +22,7 @@
 
 - name: Set Redis image URL
   set_fact:
-    _redis_image: "{{ _custom_redis_image | default(lookup('env', 'RELATED_IMAGE_GALAXY_REDIS')) | default(_redis_image, true) }}"
+    _redis_image: "{{ _custom_redis_image | default(lookup('env', 'RELATED_IMAGE_HUB_REDIS')) | default(_redis_image, true) }}"
 
 - name: Set node affinity
   set_fact:
@@ -30,7 +30,7 @@
   when: affinity is defined and affinity.node_affinity is defined
 
 - name: redis deployment
-  k8s:
+  kubernetes.core.k8s:
     state: "{{ deployment_state }}"
     definition: "{{ lookup('template', 'templates/' + item + '.deployment.yaml.j2') | from_yaml }}"
   with_items:

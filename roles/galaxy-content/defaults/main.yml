@@ -1,11 +1,11 @@
 ---
 # common default values
 client_request_timeout: 30
-ingress_type: none
+ingress_type: Route
 
-# Here we use  _galaxy_ansible_com_galaxy to get un-modified cr
+# Here we use  _automationhub_ansible_com_automationhub to get un-modified cr
 # see: https://github.com/operator-framework/operator-sdk/issues/1770
-raw_spec: "{{ vars['_galaxy_ansible_com_galaxy']['spec'] }}"
+raw_spec: "{{ vars['_automationhub_ansible_com_automationhub']['spec'] }}"
 
 # gunicorn default values
 gunicorn_timeout: "{{ (([(client_request_timeout | int), 10] | max) / 3) | int }}"

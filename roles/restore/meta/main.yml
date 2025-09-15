@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  author: Galaxy-Operator Team
-  description: A role to restore a Galaxy deployment
+  author: AutomationHub-Operator Team
+  description: A role to restore a AutomationHub deployment
   issue_tracker_url: https://github.com/ansible/galaxy-operator/issues/new
   license: GPL-2.0-or-later
   company: Red Hat

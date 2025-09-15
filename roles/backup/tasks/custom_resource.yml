@@ -23,7 +23,7 @@
       spec: "{{ _galaxy }}"
 
 - name: "Write {{ deployment_type }} object to pvc"
-  k8s_cp:
+  kubernetes.core.k8s_cp:
     namespace: "{{ backup_pvc_namespace }}"
     pod: "{{ ansible_operator_meta.name }}-db-management"
     remote_path: "{{ _backup_dir  }}/cr_object"

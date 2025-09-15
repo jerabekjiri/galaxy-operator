@@ -26,7 +26,7 @@ postgres_keep_pvc_after_upgrade: false
 # postgres_tolerations: |
 #   - key: "dedicated"
 #     operator: "Equal"
-#     value: "Galaxy"
+#     value: "AutomationHub"
 #     effect: "NoSchedule"
 postgres_tolerations: ''
 
@@ -41,9 +41,9 @@ postgres_init_container_commands: |
   chown 26:0 /var/lib/pgsql/data
   chmod 700 /var/lib/pgsql/data
 
-custom_resource_key: '_galaxy_ansible_com_galaxy'
+custom_resource_key: '_automationhub_ansible_com_automationhub'
 database_status_present: false
 
-# Here we use  _galaxy_ansible_com_galaxy to get un-modified cr
+# Here we use  _automationhub_ansible_com_automationhub to get un-modified cr
 # see: https://github.com/operator-framework/operator-sdk/issues/1770
-raw_spec: "{{ vars['_galaxy_ansible_com_galaxy']['spec'] }}"
+raw_spec: "{{ vars['_automationhub_ansible_com_automationhub']['spec'] }}"

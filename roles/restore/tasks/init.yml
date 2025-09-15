@@ -1,7 +1,7 @@
 ---
 
 - name: Look up details for the backup
-  k8s_info:
+  kubernetes.core.k8s_info:
     api_version: "{{ backup_api_version }}"
     kind: "{{ backup_kind }}"
     name: "{{ backup_name }}"
@@ -125,7 +125,7 @@
 
 # Check to make sure provided pvc exists, error loudly if not.  Otherwise, the management pod will just stay in pending state forever.
 - name: Check provided PVC exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     name: "{{ backup_pvc }}"
     kind: PersistentVolumeClaim
     namespace: "{{ backup_pvc_namespace }}"
@@ -150,7 +150,7 @@
     - provided_pvc.resources | length == 0
 
 - name: Delete any existing management pod
-  k8s:
+  kubernetes.core.k8s:
     name: "{{ ansible_operator_meta.name }}-db-management"
     kind: Pod
     api_version: v1
@@ -167,16 +167,16 @@
 
 - name: Set Postgres image URL
   set_fact:
-    _postgres_image: "{{ _custom_postgres_image | default(lookup('env', 'RELATED_IMAGE_GALAXY_POSTGRES')) | default(_postgres_image, true) }}"
+    _postgres_image: "{{ _custom_postgres_image | default(lookup('env', 'RELATED_IMAGE_HUB_POSTGRES')) | default(_postgres_image, true) }}"
 
 - name: Create management pod from templated deployment config
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'templates/management-pod.yaml.j2') | from_yaml }}"
     wait: true
 
 - name: Wait for restore management pod to be running
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Pod
     api_version: v1
     namespace: "{{ ansible_operator_meta.namespace }}"
@@ -191,7 +191,7 @@
   delay: 10
 
 - name: Check to make sure backup directory exists on PVC
-  k8s_exec:
+  kubernetes.core.k8s_exec:
     namespace: "{{ backup_pvc_namespace}}"
     pod: "{{ ansible_operator_meta.name }}-db-management"
     command: >-

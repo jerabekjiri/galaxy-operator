@@ -1,7 +1,7 @@
 ---
 
 - name: Delete any existing management pod
-  k8s:
+  kubernetes.core.k8s:
     name: "{{ ansible_operator_meta.name }}-db-management"
     kind: Pod
     api_version: v1
@@ -12,7 +12,7 @@
 
 # Check to make sure provided pvc exists, error loudly if not.  Otherwise, the management pod will just stay in pending state forever.
 - name: Check provided PVC exists
-  k8s_info:
+  kubernetes.core.k8s_info:
     name: "{{ backup_pvc }}"
     kind: PersistentVolumeClaim
     namespace: "{{ backup_pvc_namespace }}"
@@ -46,7 +46,7 @@
     backup_claim: "{{ backup_pvc | default(_default_backup_pvc, true) }}"
 
 - name: Create persistent volume claim for backup
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'templates/' + item + '.pvc.yaml.j2') | from_yaml }}"
   with_items:
@@ -55,7 +55,7 @@
     - backup_pvc == '' or backup_pvc is not defined
 
 - name: Remove ownerReferences from backup-claim pvc to avoid garbage collection
-  k8s:
+  kubernetes.core.k8s:
     definition:
       apiVersion: v1
       kind: PersistentVolumeClaim
@@ -65,18 +65,18 @@
         ownerReferences: null
 
 - name: "Get {{ deployment_type }} custom resource object"
-  k8s_info:
+  kubernetes.core.k8s_info:
     version: '{{ deployment_api_version }}'
     kind: '{{ deployment_kind }}'
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: '{{ deployment_name }}'
   register: _custom_resource
 
-- name: Set Galaxy object
+- name: Set AutomationHub object
   set_fact:
     _galaxy: "{{ _custom_resource['resources'][0] }}"
 
-- name: Set Galaxy Image used
+- name: Set AutomationHub Image used
   set_fact:
     _galaxy_image: "{{ _galaxy['status']['deployedImage'] }}"
 
@@ -156,7 +156,7 @@
     - status['ssoSecret'] | length
 
 - name: Get PVC information
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: PersistentVolumeClaim
     namespace: '{{ ansible_operator_meta.namespace }}'
     name: '{{ storage_claim }}'
@@ -180,7 +180,7 @@
 
 - name: Set Postgres image URL
   set_fact:
-    _postgres_image: "{{ _custom_postgres_image | default(lookup('env', 'RELATED_IMAGE_GALAXY_POSTGRES')) | default(_postgres_image, true) }}"
+    _postgres_image: "{{ _custom_postgres_image | default(lookup('env', 'RELATED_IMAGE_HUB_POSTGRES')) | default(_postgres_image, true) }}"
 
 - name: Determine the timestamp for the backup once for all nodes
   set_fact:
@@ -191,13 +191,13 @@
     _backup_dir: "/backups/openshift-backup-{{ now }}"
 
 - name: Create management pod from templated deployment config
-  k8s:
+  kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'templates/management-pod.yaml.j2') | from_yaml }}"
     wait: true
 
 - name: Wait for backup management pod to be running
-  k8s_info:
+  kubernetes.core.k8s_info:
     kind: Pod
     api_version: v1
     namespace: "{{ ansible_operator_meta.namespace }}"
