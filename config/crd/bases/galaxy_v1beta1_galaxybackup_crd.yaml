@@ -69,12 +69,6 @@ spec:
                   default: true
                   description: Configure no_log (hides sensitive information in operator/task logs)
                   type: boolean
-                postgres_image:
-                  description: Registry path to the PostgreSQL container to use for backup
-                  type: string
-                postgres_image_version:
-                  description: PostgreSQL container image version to use for backup
-                  type: string
               required:
                 - deployment_name
             status:
