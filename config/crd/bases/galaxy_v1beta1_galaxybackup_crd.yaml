@@ -23,6 +23,9 @@ spec:
           description: Schema validation for the GalaxyBackup CRD
           properties:
             spec:
+              x-kubernetes-validations:
+                - rule: "has(self.postgres_image) && has(self.postgres_image_version) || !has(self.postgres_image) && !has(self.postgres_image_version)"
+                  message: "Both postgres_image and postgres_image_version must be set when required"
               type: object
               properties:
                 deployment_name:
@@ -73,6 +76,12 @@ spec:
                   description: Enable compression for database dumps using pg_dump built-in compression.
                   type: boolean
                   default: true
+                postgres_image:
+                  description: Registry path to the PostgreSQL container to use for backup
+                  type: string
+                postgres_image_version:
+                  description: PostgreSQL container image version to use for backup
+                  type: string
               required:
                 - deployment_name
             status:
