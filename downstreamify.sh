@@ -138,3 +138,8 @@ sed -i -e 's|/usr/local/bin/pulpcore-manager|/usr/bin/pulpcore-manager|g' ./role
 # TODO: Set this as a 'suggested' setting via alm-examples in a way that it gets used in the AAP wrapped operator
 
 # Uneeded because it is still upstream
+
+# Deprecate postgres_migrant_configuration_secret
+sed -i \
+  -e '/postgres_migrant_configuration_secret:/{n; /description:/{/DEPRECATED/!s/$/ (DEPRECATED)/}}' \
+  config/crd/bases/galaxy_v1beta1_galaxy_crd.yaml

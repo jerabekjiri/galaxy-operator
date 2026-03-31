@@ -161,7 +161,7 @@ spec:
                 description: Customize the postgres init container commands (Non Openshift)
                 type: string
               postgres_migrant_configuration_secret:
-                description: Secret where the old database configuration can be found for data migration
+                description: Secret where the old database configuration can be found for data migration (DEPRECATED)
                 type: string
               postgres_label_selector:
                 description: Label selector used to identify postgres pod for executing migration
