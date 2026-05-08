@@ -131,7 +131,7 @@
   include_tasks: set_images.yml
 
 - name: Apply proxy environment ConfigMap
-  k8s:
+  kubernetes.core.k8s:
     apply: yes
     definition: "{{ lookup('template', 'proxy-env.configmap.yaml.j2') }}"
     state: "{{ 'present' if (http_proxy or https_proxy or no_proxy) else 'absent' }}"
