@@ -2,7 +2,7 @@
 - name: Set the status protocol and port
   set_fact:
     status_protocol: "https"
-    status_port: "8443"
+    status_port: "443"
   when:
     - ingress_type | lower == 'route'
     - route_tls_termination_mechanism | lower == 'passthrough'
@@ -10,39 +10,21 @@
 - name: Check, through galaxy-web, if the app is ready to serve requests
   uri:
     url: '{{ status_protocol }}://{{ ansible_operator_meta.name }}-web-svc.{{ ansible_operator_meta.namespace }}.svc.cluster.local:{{ status_port }}/{{ pulp_combined_settings.galaxy_api_path_prefix }}/pulp/api/v3/status/'
-  register: result_not_route
-  until: >
-    result_not_route.json is defined and
-    result_not_route.json.versions | length and
-    result_not_route.json.online_content_apps | length and
-    result_not_route.json.database_connection.connected and
-    (result_not_route.json.redis_connection.connected or not pulp_combined_settings.cache_enabled) and
-    result_not_route.json.online_workers | map(attribute='name') | select('match', '^[0-9]+@.*$') | list | count > 0
-  delay: 5
-  retries: 10
-  when:
-    - ingress_type | lower != 'route'
-
-- name: Check, through galaxy-route, if the app is ready to serve requests
-  uri:
-    url: 'https://{{ route_host }}/{{ pulp_combined_settings.galaxy_api_path_prefix }}/pulp/api/v3/status/'
     validate_certs: no
-  register: result_route
+  register: result_status
   until: >
-    result_route.json is defined and
-    result_route.json.versions | length and
-    result_route.json.online_content_apps | length and
-    result_route.json.database_connection.connected and
-    (result_route.json.redis_connection.connected or not pulp_combined_settings.cache_enabled) and
-    result_route.json.online_workers | map(attribute='name') | select('match', '^[0-9]+@.*$') | list | count > 0
+    result_status.json is defined and
+    result_status.json.versions | length and
+    result_status.json.online_content_apps | length and
+    result_status.json.database_connection.connected and
+    (result_status.json.redis_connection.connected or not pulp_combined_settings.cache_enabled) and
+    result_status.json.online_workers | map(attribute='name') | select('match', '^[0-9]+@.*$') | list | count > 0
   delay: 5
   retries: 60
-  when:
-    - ingress_type | lower == 'route'
 
 # Workaround to issue https://github.com/ansible/ansible/issues/76176
 - set_fact:
-    result: "{{ result_route.json is defined | ternary(result_route, result_not_route) }}"
+    result: "{{ result_status }}"
 
 - name: Get installed plugins
   set_fact:
